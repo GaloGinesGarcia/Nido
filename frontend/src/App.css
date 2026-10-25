@@ -181,3 +181,8 @@
   outline: 2px solid #b42318;
   outline-offset: 2px;
 }
+
+.nido-intro .mensaje-almacenamiento {
+  color: #b42318;
+  font-size: 14px;
+}

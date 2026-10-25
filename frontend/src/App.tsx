@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import TarjetaResumen from './components/TarjetaResumen'
 import './App.css'
 
@@ -6,6 +6,47 @@ type Gasto = {
   id: string
   concepto: string
   importeCentimos: number
+}
+
+const CLAVE_GASTOS = 'nido-gastos-v1'
+
+const GASTOS_INICIALES: Gasto[] = [
+  { id: 'gasto-inicial', concepto: 'Gastos iniciales de ejemplo', importeCentimos: 65000 },
+]
+
+function cargarGastos(): Gasto[] {
+  try {
+    const textoGuardado = localStorage.getItem(CLAVE_GASTOS)
+
+    if (textoGuardado === null) {
+      return GASTOS_INICIALES
+    }
+
+    const datos: unknown = JSON.parse(textoGuardado)
+
+    if (!Array.isArray(datos)) {
+      throw new Error('Los datos guardados no son una lista.')
+    }
+
+    const sonValidos = datos.every((gasto) =>
+      gasto !== null &&
+      typeof gasto === 'object' &&
+      typeof gasto.id === 'string' &&
+      typeof gasto.concepto === 'string' &&
+      gasto.concepto.trim() !== '' &&
+      Number.isSafeInteger(gasto.importeCentimos) &&
+      gasto.importeCentimos > 0
+    )
+
+    if (!sonValidos) {
+      throw new Error('La lista contiene gastos no válidos.')
+    }
+
+    return datos
+  } catch (error) {
+    console.error('No se pudieron recuperar los gastos guardados.', error)
+    return GASTOS_INICIALES
+  }
 }
 
 function formatearImporte(centimos: number): string {
@@ -18,13 +59,24 @@ function formatearImporte(centimos: number): string {
 function App() {
   const ingresosCentimos = 200000
 
-  const [gastos, setGastos] = useState<Gasto[]>([{ id: 'gasto-inicial', concepto: 'Gastos iniciales de ejemplo', importeCentimos: 65000 },])
+  const [gastos, setGastos] = useState<Gasto[]>(cargarGastos)
   const [importeTexto, setImporteTexto] = useState('')
   const [error, setError] = useState('')
   const [concepto, setConcepto] = useState('')
   const [errorConcepto, setErrorConcepto] = useState('')
+  const [errorGuardado, setErrorGuardado] = useState('')
   const gastosCentimos = gastos.reduce((total, gasto) => total + gasto.importeCentimos, 0)
   const disponibleCentimos = ingresosCentimos - gastosCentimos
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CLAVE_GASTOS, JSON.stringify(gastos))
+      setErrorGuardado('')
+    } catch (error) {
+      console.error('No se pudieron guardar los gastos.', error)
+      setErrorGuardado('Los cambios no se han podido guardar en este navegador.')
+    }
+  }, [gastos])
 
   function registrarGasto() {
     const conceptoLimpio = concepto.trim()
@@ -116,6 +168,9 @@ function App() {
 
         <button type="submit" className="boton-principal">Añadir gasto</button>
       </form>
+      {errorGuardado && (
+        <p className="mensaje-almacenamiento" role="alert">{errorGuardado}</p>
+      )}
           <section className="listado-gastos">
             <h2>Gastos registrados</h2>
 
