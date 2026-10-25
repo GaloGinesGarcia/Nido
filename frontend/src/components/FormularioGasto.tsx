@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { convertirACentimos } from '../utils/moneda'
+import { CATEGORIAS_GASTO, esCategoriaGasto } from '../types/Gasto'
+import type { CategoriaGasto } from '../types/Gasto'
 
 type FormularioGastoProps = {
-  onRegistrar: (concepto: string, importeCentimos: number) => void
+  onRegistrar: (concepto: string, importeCentimos: number, categoria: CategoriaGasto) => void
 }
 
 function FormularioGasto({ onRegistrar }: FormularioGastoProps) {
@@ -10,6 +12,7 @@ function FormularioGasto({ onRegistrar }: FormularioGastoProps) {
   const [importeTexto, setImporteTexto] = useState('')
   const [errorConcepto, setErrorConcepto] = useState('')
   const [error, setError] = useState('')
+  const [categoria, setCategoria] = useState<CategoriaGasto>('Otros')
 
   function enviarFormulario() {
     const conceptoLimpio = concepto.trim()
@@ -28,12 +31,13 @@ function FormularioGasto({ onRegistrar }: FormularioGastoProps) {
       return
     }
 
-    onRegistrar(conceptoLimpio, importeCentimos)
+    onRegistrar(conceptoLimpio, importeCentimos, categoria)
 
     setConcepto('')
     setImporteTexto('')
     setErrorConcepto('')
     setError('')
+    setCategoria('Otros')
   }
 
   return (
@@ -52,7 +56,18 @@ function FormularioGasto({ onRegistrar }: FormularioGastoProps) {
       {errorConcepto && (
         <p id="error-concepto" className="mensaje-error" role="alert">{errorConcepto}</p>
       )}
+       <label htmlFor="categoria-gasto">Categoría</label>
+        <select id="categoria-gasto" value={categoria} onChange={(evento) => {
+        const valor = evento.target.value
 
+        if (esCategoriaGasto(valor)) {
+            setCategoria(valor)
+        }
+        }}>
+        {CATEGORIAS_GASTO.map((opcion) => (
+            <option key={opcion} value={opcion}>{opcion}</option>
+        ))}
+        </select>
       <label htmlFor="importe-gasto">Importe del gasto (€)</label>
       <input id="importe-gasto" type="text" inputMode="decimal" placeholder="Ej. 12,50" value={importeTexto}
         onChange={(evento) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import TarjetaResumen from './components/TarjetaResumen'
 import { cargarGastos, guardarGastos } from './services/almacenamientoGastos'
-import type { Gasto } from './types/Gasto'
+import type { CategoriaGasto, Gasto } from './types/Gasto'
 import ListadoGastos from './components/ListadoGastos'
 import { formatearImporte } from './utils/moneda'
 import FormularioGasto from './components/FormularioGasto'
@@ -9,12 +9,7 @@ import './App.css'
 
 function App() {
   const ingresosCentimos = 200000
-
   const [gastos, setGastos] = useState<Gasto[]>(cargarGastos)
-  
-  
-  
-  
   const [errorGuardado, setErrorGuardado] = useState('')
   const gastosCentimos = gastos.reduce((total, gasto) => total + gasto.importeCentimos, 0)
   const disponibleCentimos = ingresosCentimos - gastosCentimos
@@ -29,11 +24,12 @@ function App() {
     }
   }, [gastos])
 
-  function registrarGasto(concepto: string, importeCentimos: number) {
+  function registrarGasto(concepto: string, importeCentimos: number, categoria: CategoriaGasto) {
   const nuevoGasto: Gasto = {
     id: crypto.randomUUID(),
     concepto,
     importeCentimos,
+    categoria,
   }
 
   setGastos((gastosActuales) => [...gastosActuales, nuevoGasto])

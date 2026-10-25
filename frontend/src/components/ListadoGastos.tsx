@@ -18,7 +18,7 @@ function ListadoGastos({ gastos, onEliminar }: ListadoGastosProps) {
       <ul className="lista-gastos">
         {gastos.map((gasto) => (
           <li key={gasto.id}>
-            <span>{gasto.concepto}</span>
+            <span>{gasto.concepto} · {gasto.categoria}</span>
 
             <div className="acciones-gasto">
               <strong>{formatearImporte(gasto.importeCentimos)}</strong>

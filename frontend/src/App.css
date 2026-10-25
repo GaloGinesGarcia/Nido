@@ -100,7 +100,8 @@
   font-weight: 600;
 }
 
-.formulario-gasto input {
+.formulario-gasto input,
+.formulario-gasto select {
   width: 100%;
   padding: 12px;
 

@@ -1,9 +1,10 @@
 import type { Gasto } from '../types/Gasto'
+import { esCategoriaGasto } from '../types/Gasto'
 
 const CLAVE_GASTOS = 'nido-gastos-v1'
 
 const GASTOS_INICIALES: Gasto[] = [
-  { id: 'gasto-inicial', concepto: 'Gastos iniciales de ejemplo', importeCentimos: 65000 },
+  { id: 'gasto-inicial', concepto: 'Gastos iniciales de ejemplo', importeCentimos: 65000, categoria: 'Otros' },
 ]
 
 export function cargarGastos(): Gasto[] {
@@ -34,7 +35,12 @@ export function cargarGastos(): Gasto[] {
       throw new Error('La lista contiene gastos no válidos.')
     }
 
-    return datos
+    return datos.map((gasto): Gasto => ({
+        id: gasto.id,
+        concepto: gasto.concepto,
+        importeCentimos: gasto.importeCentimos,
+        categoria: esCategoriaGasto(gasto.categoria) ? gasto.categoria : 'Otros',
+    }))
   } catch (error) {
     console.error('No se pudieron recuperar los gastos guardados.', error)
     return GASTOS_INICIALES
