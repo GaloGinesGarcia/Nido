@@ -2,6 +2,12 @@ import { useState } from 'react'
 import TarjetaResumen from './components/TarjetaResumen'
 import './App.css'
 
+type Gasto = {
+  id: string
+  concepto: string
+  importeCentimos: number
+}
+
 function formatearImporte(centimos: number): string {
   return new Intl.NumberFormat('es-ES', {
     style: 'currency',
@@ -12,13 +18,24 @@ function formatearImporte(centimos: number): string {
 function App() {
   const ingresosCentimos = 200000
 
-  const [gastosCentimos, setGastosCentimos] = useState(65000)
+  const [gastos, setGastos] = useState<Gasto[]>([{ id: 'gasto-inicial', concepto: 'Gastos iniciales de ejemplo', importeCentimos: 65000 },])
   const [importeTexto, setImporteTexto] = useState('')
   const [error, setError] = useState('')
-
+  const [concepto, setConcepto] = useState('')
+  const [errorConcepto, setErrorConcepto] = useState('')
+  const gastosCentimos = gastos.reduce((total, gasto) => total + gasto.importeCentimos, 0)
   const disponibleCentimos = ingresosCentimos - gastosCentimos
 
   function registrarGasto() {
+    const conceptoLimpio = concepto.trim()
+
+    if (conceptoLimpio === '') {
+      setErrorConcepto('Escribe un concepto para el gasto.')
+      return
+    }
+
+    setErrorConcepto('')
+    
     const texto = importeTexto.trim()
 
     if (!/^\d+([.,]\d{1,2})?$/.test(texto)) {
@@ -36,9 +53,19 @@ function App() {
       return
     }
 
-    setGastosCentimos((gastosActuales) => gastosActuales + importeCentimos)
+    const nuevoGasto: Gasto = {
+      id: crypto.randomUUID(),
+      concepto: conceptoLimpio,
+      importeCentimos,
+    }
+
+  setGastos((gastosActuales) => [...gastosActuales, nuevoGasto])
     setImporteTexto('')
     setError('')
+  }
+
+  function eliminarGasto(id: string) {
+  setGastos((gastosActuales) => gastosActuales.filter((gasto) => gasto.id !== id))
   }
 
   return (
@@ -54,6 +81,21 @@ function App() {
       </div>
 
       <form className="formulario-gasto" onSubmit={(evento) => {evento.preventDefault(); registrarGasto()}}>
+
+        <label htmlFor="concepto-gasto">Concepto</label>
+        <input id="concepto-gasto" type="text" placeholder="Ej. Compra del supermercado" value={concepto}
+          onChange={(evento) => {
+            setConcepto(evento.target.value)
+            setErrorConcepto('')
+          }}
+          aria-invalid={errorConcepto !== ''}
+          aria-describedby={errorConcepto ? 'error-concepto' : undefined}
+          required
+        />
+
+        {errorConcepto && (
+          <p id="error-concepto" className="mensaje-error" role="alert">{errorConcepto}</p>
+        )}
  
         <label htmlFor="importe-gasto">Importe del gasto (€)</label>
         <input id="importe-gasto" type="text" inputMode="decimal" placeholder="Ej. 12,50" value={importeTexto}
@@ -74,6 +116,26 @@ function App() {
 
         <button type="submit" className="boton-principal">Añadir gasto</button>
       </form>
+          <section className="listado-gastos">
+            <h2>Gastos registrados</h2>
+
+            {gastos.length === 0 && (
+              <p>Todavía no hay gastos registrados.</p>
+            )}
+
+            <ul className="lista-gastos">
+              {gastos.map((gasto) => (
+                <li key={gasto.id}>
+                  <span>{gasto.concepto}</span>
+
+                  <div className="acciones-gasto">
+                    <strong>{formatearImporte(gasto.importeCentimos)}</strong>
+                    <button type="button" className="boton-eliminar" onClick={() => eliminarGasto(gasto.id)} aria-label={`Eliminar gasto: ${gasto.concepto}`}>Eliminar</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
     </main>
   )
 }

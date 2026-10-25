@@ -114,3 +114,70 @@
   color: #b42318;
   font-size: 14px;
 }
+
+.listado-gastos {
+  width: 100%;
+  max-width: 680px;
+  text-align: left;
+}
+
+.listado-gastos h2 {
+  margin: 0 0 16px;
+  font-size: 22px;
+}
+
+.lista-gastos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista-gastos li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+
+  padding: 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e8e4;
+}
+
+.lista-gastos span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lista-gastos strong {
+  white-space: nowrap;
+}
+
+.acciones-gasto {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.boton-eliminar {
+  padding: 8px 12px;
+
+  background-color: transparent;
+  color: #b42318;
+  border: none;
+  border-radius: 6px;
+
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.boton-eliminar:hover {
+  background-color: #fef3f2;
+}
+
+.boton-eliminar:focus-visible {
+  outline: 2px solid #b42318;
+  outline-offset: 2px;
+}
