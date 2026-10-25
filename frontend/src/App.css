@@ -1,0 +1,116 @@
+.nido-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  min-height: 60vh;
+  padding: 32px 24px;
+
+  background-color: #f6f8f7;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.nido-intro h1 {
+  margin: 0;
+  color: #087f75;
+  font-size: 48px;
+}
+
+.nido-intro p {
+  margin: 0;
+  max-width: 520px;
+
+  color: #52645e;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.tarjeta-resumen {
+  width: 100%;
+  max-width: 320px;
+  padding: 24px;
+
+  background-color: #ffffff;
+  border: 1px solid #e1e8e4;
+  border-radius: 12px;
+
+  text-align: left;
+}
+
+.tarjeta-resumen h2 {
+  margin: 0;
+
+  color: #52645e;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.tarjeta-resumen strong {
+  display: block;
+  margin-top: 12px;
+
+  color: #243b37;
+  font-size: 32px;
+}
+
+.resumen-tarjetas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+
+  width: 100%;
+}
+
+.boton-principal {
+  padding: 12px 20px;
+
+  background-color: #087f75;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+
+  font: inherit;
+  cursor: pointer;
+}
+
+.boton-principal:hover {
+  background-color: #06665e;
+}
+
+.boton-principal:focus-visible {
+  outline: 3px solid #087f75;
+  outline-offset: 3px;
+}
+
+.formulario-gasto {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  width: 100%;
+  max-width: 320px;
+  text-align: left;
+}
+
+.formulario-gasto label {
+  font-weight: 600;
+}
+
+.formulario-gasto input {
+  width: 100%;
+  padding: 12px;
+
+  border: 1px solid #b7c9c0;
+  border-radius: 8px;
+
+  font: inherit;
+}
+
+.formulario-gasto .mensaje-error {
+  color: #b42318;
+  font-size: 14px;
+}
